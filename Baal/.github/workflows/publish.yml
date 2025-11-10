@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - feat/baalZodiac
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+          registry-url: https://registry.npmjs.org/
+      - run: yarn global add npm
+      - name: Check package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+      - name: Echo package vs published versions
+        run: |
+            echo "Committed version: ${{ steps.cpv.outputs.committed-version }}"
+            echo "Published version: ${{ steps.cpv.outputs.published-version }}"
+            echo "Is new version: ${{ steps.cpv.outputs.is-new-version }}"
+      - run: yarn install
+        if: steps.cpv.outputs.is-new-version == 'true'
+      - run: yarn build
+        if: steps.cpv.outputs.is-new-version == 'true'
+      - run: yarn test
+        if: steps.cpv.outputs.is-new-version == 'true'
+      - name: publishing
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}' > .npmrc
+          npm publish --access public --scope daohaus --otp ${{ secrets.NPM_TOKEN }}

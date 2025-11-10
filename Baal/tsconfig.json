@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "types": [
+      "chai",
+      "node"
+    ],
+    "target": "es2018",
+    "module": "commonjs",
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "src/index.ts",
+    "src/types/**/*.ts",
+    "src/types/common.ts",
+    "src/addresses/*.ts",
+    "abi/**/*.json",
+    "hardhat.config.ts",
+    "./scripts",
+    "./deploy",
+    "./test",
+    "typechain/**/*"
+  ],
+}
