@@ -31,12 +31,15 @@ dotenv.config();
 const defaultNetwork = "localhost";
 
 const infuraKey = () => {
-  return process.env.INFURA_API_KEY || '' // <---- YOUR INFURA ID! (or it won't work)
+  return process.env.INFURA_API_KEY || ""; // <---- YOUR INFURA ID! (or it won't work)
 };
 
 const mnemonic = () => {
   try {
-    return process.env.MNEMONIC || fs.readFileSync("./mnemonic.txt").toString().trim();
+    return (
+      process.env.MNEMONIC ||
+      fs.readFileSync("./mnemonic.txt").toString().trim()
+    );
   } catch (e) {
     if (defaultNetwork !== "localhost") {
       console.log(
@@ -45,7 +48,7 @@ const mnemonic = () => {
     }
   }
   return "";
-}
+};
 
 const explorerApiKey = (networkName: string) => {
   const fromEnv = () => {
@@ -65,9 +68,9 @@ const explorerApiKey = (networkName: string) => {
       default:
         break;
     }
-  }
-  return fromEnv() || '';
-}
+  };
+  return fromEnv() || "";
+};
 
 const config: HardhatUserConfig = {
   networks: {
@@ -85,7 +88,7 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('ethereum'),
+          apiKey: explorerApiKey("ethereum"),
         },
       },
     },
@@ -97,27 +100,29 @@ const config: HardhatUserConfig = {
       accounts: process.env.ACCOUNT_PK
         ? [process.env.ACCOUNT_PK]
         : {
-          mnemonic: mnemonic(),
-        },
+            mnemonic: mnemonic(),
+          },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('ethereum'),
+          apiKey: explorerApiKey("ethereum"),
         },
       },
     },
     sepolia: {
-      url: `https://sepolia.infura.io/v3/${infuraKey()}`,
+      url:
+        process.env.ALCHEMY_ETHEREUM_SEPOLIA_URL ||
+        `https://sepolia.infura.io/v3/${infuraKey()}`,
       // gas: 5000000,
       // gasPrice: 100000000000,
       // gasMultiplier: 2,
       accounts: process.env.ACCOUNT_PK
         ? [process.env.ACCOUNT_PK]
         : {
-          mnemonic: mnemonic(),
-        },
+            mnemonic: mnemonic(),
+          },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('ethereum'),
+          apiKey: explorerApiKey("ethereum"),
         },
       },
     },
@@ -130,9 +135,9 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('gnosis'),
+          apiKey: explorerApiKey("gnosis"),
         },
-      }
+      },
     },
     gnosis: {
       url: "https://rpc.gnosischain.com/",
@@ -143,7 +148,7 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('gnosis'),
+          apiKey: explorerApiKey("gnosis"),
         },
       },
     },
@@ -154,7 +159,7 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('polygon'),
+          apiKey: explorerApiKey("polygon"),
         },
       },
     },
@@ -165,7 +170,7 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('polygon'),
+          apiKey: explorerApiKey("polygon"),
         },
       },
     },
@@ -176,7 +181,7 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('arbitrumOne'),
+          apiKey: explorerApiKey("arbitrumOne"),
         },
       },
     },
@@ -187,18 +192,19 @@ const config: HardhatUserConfig = {
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('optimism'),
+          apiKey: explorerApiKey("optimism"),
         },
       },
     },
     base: {
-      url: `https://mainnet.base.org`,
+      url:
+        process.env.ALCHEMY_BASE_MAINNET_URL || `https://base-mainnet.base.org`,
       accounts: {
         mnemonic: mnemonic(),
       },
       verify: {
         etherscan: {
-          apiKey: explorerApiKey('base'),
+          apiKey: explorerApiKey("base"),
         },
       },
     },
@@ -208,15 +214,15 @@ const config: HardhatUserConfig = {
     // Obtain one at https://etherscan.io/
     // apiKey: "61ED96HQAY6PASTEWRXN6AMYQEKM8SYTRY" // etherscan
     apiKey: {
-      gnosis: explorerApiKey('gnosis'),
-      xdai: explorerApiKey('gnosis'),
-      goerli: explorerApiKey('ethereum'),
-      mainnet: explorerApiKey('ethereum'),
-      polygon: explorerApiKey('polygon'),
-      polygonMumbai: explorerApiKey('polygon'),
-      arbitrumOne: explorerApiKey('arbitrumOne'),
-      optimisticEthereum: explorerApiKey('optimism'),
-      base: explorerApiKey('base'),
+      gnosis: explorerApiKey("gnosis"),
+      xdai: explorerApiKey("gnosis"),
+      goerli: explorerApiKey("ethereum"),
+      mainnet: explorerApiKey("ethereum"),
+      polygon: explorerApiKey("polygon"),
+      polygonMumbai: explorerApiKey("polygon"),
+      arbitrumOne: explorerApiKey("arbitrumOne"),
+      optimisticEthereum: explorerApiKey("optimism"),
+      base: explorerApiKey("base"),
     },
     customChains: [
       {
@@ -233,9 +239,9 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: "https://api.basescan.org/api",
           browserURL: "https://basescan.org",
-        }
+        },
       },
-    ]
+    ],
   },
   solidity: {
     compilers: [
@@ -264,17 +270,17 @@ const config: HardhatUserConfig = {
             // },
           },
         },
-      }
+      },
     ],
   },
   namedAccounts: {
     deployer: 0,
   },
   abiExporter: {
-    path: './abi',
+    path: "./abi",
     clear: true,
     flat: true,
-    except: ['@gnosis.pm', '@openzeppelin'],
+    except: ["@gnosis.pm", "@openzeppelin"],
   },
   typechain: {
     outDir: "src/types",
@@ -282,7 +288,7 @@ const config: HardhatUserConfig = {
   },
   gasReporter: {
     currency: "USD",
-    enabled: process.env.REPORT_GAS === 'true',
+    enabled: process.env.REPORT_GAS === "true",
     excludeContracts: [],
     src: "./contracts",
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
