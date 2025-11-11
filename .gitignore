@@ -31,7 +31,6 @@ expo-env.d.ts
 /ios
 /android
 src/types/
-abi/
 export/
 
 # Hardhat / Solidity
